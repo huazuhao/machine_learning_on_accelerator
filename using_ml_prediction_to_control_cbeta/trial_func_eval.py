@@ -208,9 +208,6 @@ def main():
             if (not con_found):
                 raise ValueError("Constraint " + con + " was not found in the function merits.")
 
-    print('we are inside trial func eval and we are about to be done')
-    #print('here is the docs_update objectives')
-    #print(docs_update["objectives"])
 
     # print the return file to optimizer
     os.chdir(home_dir)  # in case a relative path to temporary directory was specified
@@ -224,17 +221,9 @@ def main():
     # Save the ind to json
     print('inside trial func eval and save_ind_file is', save_ind_file)
 
-    #print('here is the ind')
-    #print(ind)
-
     if (save_ind_file is not None):
         vprint("Saving individual to json file 'template/ind.template.json': ", verbose > 0, 1, False)
-
         pickle.dump(ind, open(save_ind_file, "wb"))
-
-        #with open(save_ind_file, 'w') as outfile:
-        #    json.dump(ind, outfile)
-
         vprint("done.", verbose > 0, 0, True)
 
 

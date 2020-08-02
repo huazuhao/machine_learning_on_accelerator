@@ -1,4 +1,8 @@
+#a lot of utility functions for helping out small tasks
+
+
 import os
+
 def OpenFile(File,SkipLines=0):
 	with open(File,'r') as f:
 		for j in range(SkipLines):
@@ -6,34 +10,40 @@ def OpenFile(File,SkipLines=0):
 		lines=f.readlines()
 	f.close()
 	return lines
+
 def MakeDecDic(File):
+	#make a decision file dictionary
 	lines=OpenFile(File)
 	DecDic={}
 	for line in lines:
 		line=line.split()
 		DecDic[line[0]]=[float(line[2]),float(line[3])] #Keyword=[min,max]
 	return DecDic
+
 def MakeObjDic(File):
+	#make an objective file dictionary
 	lines=OpenFile(File)
 	ObjDic={}
 	for line in lines:
 		line=line.split()
 		ObjDic[line[0]]=line[1]
 	return ObjDic
+
 def MakeConDic(File):
+	#make a constrain file dictionary
 	lines=OpenFile(File)
 	ConDic={}
 	for line in lines:
 		line=line.split()
 		ConDic[line[0]]={line[1]:float(line[2])} #constrain variable= {type of constraint: value} (potentially not general enough)
 	return ConDic
+
 def MakeFileDic(FileName=[],AddPath='../'):
     '''
     FileName= Should be a path leading to var_param
     AddPath= local path from where you execute python to where main directory is (i.e. directory where ./how_to_run.txt was executed)
     returns a dictionary of file paths from var_param
     '''
-    #if not FileName:FileName='../optconf/var_param'
     if not FileName:FileName=AddPath+'optconf/var_param'
     lines=OpenFile(FileName)
     #These are files set in var_param
@@ -45,10 +55,7 @@ def MakeFileDic(FileName=[],AddPath='../'):
                 if CurLine[0]==k:FileDic[k]=AddPath+CurLine[1]
     return FileDic
 
-
-
-
-def GetAFront(FrontNumber,Skiplines=0,AddPath='../'): #better name would be GetAnIndividual, but too late for that...
+def GetAFront(FrontNumber,Skiplines=0,AddPath='../'): 
 	'''
 	FrontNumber=based on the order the point appeared in the .out file
 	creates a dictionary containing all variables used to compute point on Pareto front
@@ -77,12 +84,14 @@ def GetAFront(FrontNumber,Skiplines=0,AddPath='../'): #better name would be GetA
 	for k in ConDic:
 		FrontDic[k]='C'
 	return FrontDic
-def DummyFront(AddPath='../'): #creates a FrontDic just like GetAFront but with holder values
+
+def DummyFront(AddPath='../'):
+	#creates a FrontDic just like GetAFront but with holder values
 	'''
 	AddPath= local path from where you execute python to where main directory is (i.e. directory where ./how_to_run.txt was executed)
 	'''
 	FileDic=MakeFileDic(AddPath=AddPath)
-        ####
+    
 	ParetoFile=FileDic['outputfile']
 	DecFile=FileDic['decision_variables_file']
 	DecDic=MakeDecDic(DecFile)
@@ -90,9 +99,7 @@ def DummyFront(AddPath='../'): #creates a FrontDic just like GetAFront but with 
 	ObjDic=MakeObjDic(ObjFile)
 	ConFile=FileDic['constraints_file']
 	ConDic=MakeConDic(ConFile)
-	#####
-	#lines=OpenFile(ParetoFile,SkipLines=2)
-	#FrontLine=lines[FrontNumber].split()
+	
 	FrontDic={}
 	ind=0
 	for k in DecDic:
@@ -127,6 +134,7 @@ def MakeFrontFile(FileName,FrontNumber):
 			if v=='C':
 				f.write(k+' C\n')
 		f.close()
+
 def MakeFrontFileFromFront(FileName,FrontDic,ID_number=0,FileClean=1):
 	'''
 	creates a file that can be used with func_eval.py
@@ -136,10 +144,8 @@ def MakeFrontFileFromFront(FileName,FrontDic,ID_number=0,FileClean=1):
 	with open(FileName,"w+") as f:
 		f.write('ID   id_number ' + str(ID_number)+' \n')
 		f.write('NODE  node_name   all.q \n')
-		#f.write('FILE_CLEANUP   F   1 \n')
 		f.write('FILE_CLEANUP   F '  +str(FileClean) +'\n')
-		#f.write('TEMPLATE_DIR   P '+TemplateDir+ ' \n')
-		#f.write('TEMP_DIR   P '+ TempDir+ ' \n')
+
 		for k,v in FrontDic.items():
 			if v!='C':
 				if v[0]=='D':
@@ -149,7 +155,9 @@ def MakeFrontFileFromFront(FileName,FrontDic,ID_number=0,FileClean=1):
 			if v=='C':
 				f.write(k+' C\n')
 		f.close()
+
 def GetParetoCol(File,ColName,FrontDic):
+	# from the pareto front to control
 	lines=OpenFile(File,SkipLines=2)
 	ColInd=0
 	Col=[]
@@ -157,7 +165,6 @@ def GetParetoCol(File,ColName,FrontDic):
 	for k in FrontDic:
 		if k==ColName:
 			FoundColumn=True
-			#print('found it')
 			break
 		ColInd=ColInd+1
 	CurLine=0
@@ -171,7 +178,9 @@ def GetParetoCol(File,ColName,FrontDic):
 		return []
 	else:
 		return Col
+
 def GetParetoFront(AddPath='../'):
+	#get the pareto front
 	FileDic=MakeFileDic(AddPath=AddPath)
 	PareFile=FileDic['outputfile']
 	ObjFile=FileDic['objectives_file']
@@ -186,7 +195,8 @@ def GetParetoFront(AddPath='../'):
 		ObjNames=ObjNames+[k]
 	return ObjNames,ObjArray
 
-def GetObjsFromRun(RunFile,AddPath='../'): #same as GetParetoFront but can be directed to RUN01_his if needed
+def GetObjsFromRun(RunFile,AddPath='../'): 
+	#same as GetParetoFront but can be directed to RUN01_his if needed
 	FileDic=MakeFileDic(AddPath=AddPath)
 	PareFile=RunFile
 	ObjFile=FileDic['objectives_file']

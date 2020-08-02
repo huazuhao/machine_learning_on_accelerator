@@ -16,7 +16,7 @@ def write_sh_file_and_submit(max_worker,cwd):
         worker_name = os.path.join(cwd,'a_worker_for_generating_data.py')
 
         with open(sh_file_name, 'a') as f:
-            # Write the data to it
+            # Write the command
             f.write('''python '''+worker_name+ ''' ''' + str(index) + ''' '''+cwd + '''\n''')
 
 
