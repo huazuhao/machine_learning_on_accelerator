@@ -19,6 +19,10 @@ def MakeIndividual(total_run_index, accelerator_file_location, FileName, XDic, N
 
 
 def main_for_generating_data(input_index,cwd):
+    #the idea is that the input of GPT simulations will be based on results of 
+    #machine learning algorithms. 
+    #the input will not be random but carefully choosen by ML algorithms. 
+    
     accelerator_file_location = '/nfs/acc/user/zh296/inopt/examples/cbetaDL/'
 
     Nsamples = 1

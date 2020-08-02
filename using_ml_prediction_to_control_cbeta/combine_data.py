@@ -11,7 +11,8 @@ def combine_data(max_worker):
 
     # try to open the data pickle file
     try:
-        # this is where we usually do the appending
+        # this is where we usually do the appending step
+        # we want to combine data so we append new data to the end
         file_name_x = 'X_trainingAll.p'
         file_name_y = 'Y_trainingAll.p'
 
@@ -85,7 +86,8 @@ def combine_data(max_worker):
                     else:
                         break
 
-                #now, I need to do some type of data structure engineering
+                #now, we want to turn the data structure into a dictionary
+                #with the appropriate keys. 
                 for key in total_data_x.keys():
                     temp = total_data_x[key]
                     temp = [temp]

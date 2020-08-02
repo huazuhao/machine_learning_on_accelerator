@@ -77,7 +77,7 @@ def main():
    # Form the individual from file
    #---------------------------------------------------------------------------------------
    vprint("Loading evaluation input file '" + eval_file +"': ", verbose>0, 0, False)
-   eval_file_data = eparser.eval_parser(eval_file, False)  # Parse evaluation input file
+   eval_file_data = eval_parser.eval_parser(eval_file, False)  # Parse evaluation input file
    docs = eval_file_data.get_DOC_dict()            # retrieve the ID & dec/obj/con data  
    vprint("done.", verbose>0, 0, True)   
 
@@ -105,7 +105,7 @@ def main():
    # Run the GPT evaluation, retrieve data and send back to optimizer
    #---------------------------------------------------------------------------------------
    output = gpt_distgen_eval(ind["docs"]["decisions"], autophase = True, workdir=work_dir, template_dir=template_dir, verbose=verbose, do_cleanup=clean_up)
-   docs_update = docs;
+   docs_update = docs
    if(not output["error"]): # If no errors, update the docs 
       
       for name in output["merits"].keys():
